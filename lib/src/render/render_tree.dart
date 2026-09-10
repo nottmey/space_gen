@@ -6655,8 +6655,7 @@ enum _ResponseBodySource {
   json(DartFunctionCall(name: 'jsonDecode', arguments: [_responseBody])),
 
   /// A non-JSON content type: the body is the value.
-  raw(_responseBody)
-  ;
+  raw(_responseBody);
 
   const _ResponseBodySource(this.expression);
 
