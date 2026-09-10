@@ -41,8 +41,7 @@ sealed class Status {
 
 enum StatusKnown implements Status {
   open._('open'),
-  closed._('closed')
-  ;
+  closed._('closed');
 
   const StatusKnown._(this.raw);
 
