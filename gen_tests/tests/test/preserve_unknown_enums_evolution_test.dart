@@ -44,10 +44,7 @@ void main() {
     });
 
     test('exhaustive Status switch treats v2 tokens as unknown', () {
-      expect(
-        describeStatus(Status.fromJson('pending')),
-        'unknown:pending',
-      );
+      expect(describeStatus(Status.fromJson('pending')), 'unknown:pending');
       expect(describeStatus(Status.open), 'open');
       expect(describeStatus(Status.closed), 'closed');
     });
