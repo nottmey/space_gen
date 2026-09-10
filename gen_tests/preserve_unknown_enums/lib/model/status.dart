@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 sealed class Status {
   const Status();
 
@@ -39,7 +41,8 @@ sealed class Status {
 
 enum StatusKnown implements Status {
   open._('open'),
-  closed._('closed');
+  closed._('closed')
+  ;
 
   const StatusKnown._(this.raw);
 
@@ -53,6 +56,7 @@ enum StatusKnown implements Status {
   String toString() => raw;
 }
 
+@immutable
 final class StatusUnknown extends Status {
   const StatusUnknown(this.raw);
 

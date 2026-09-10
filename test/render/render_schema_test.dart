@@ -4504,6 +4504,7 @@ void main() {
       expect(result, contains('return TestUnknown(json);'));
       expect(result, contains('enum TestKnown implements Test {'));
       expect(result, contains("open._('open')"));
+      expect(result, contains('@immutable'));
       expect(result, contains('final class TestUnknown extends Test {'));
       expect(result, contains('final String raw;'));
       expect(
@@ -4575,6 +4576,7 @@ void main() {
       expect(result, contains('int get raw;'));
       expect(result, contains('enum TestKnown implements Test {'));
       expect(result, contains('blockMessage._(1)'));
+      expect(result, contains('@immutable'));
       expect(result, contains('final class TestUnknown extends Test {'));
       expect(result, contains('final int raw;'));
     });

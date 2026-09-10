@@ -57,6 +57,7 @@ enum {{ knownTypeName }} implements {{ typeName }} {
     String toString() => raw{{^valueIsString}}.toString(){{/valueIsString}};
 }
 
+@immutable
 final class {{ unknownTypeName }} extends {{ typeName }} {
     const {{ unknownTypeName }}(this.raw);
 

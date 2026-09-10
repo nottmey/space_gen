@@ -797,6 +797,12 @@ void main() {
           outDir: out,
           quirks: const Quirks(preserveUnknownEnums: true),
         );
+        final status = out
+            .childFile('lib/models/status.dart')
+            .readAsStringSync();
+        expect(status, contains("import 'package:meta/meta.dart';"));
+        expect(status, contains('@immutable'));
+        expect(status, contains('final class StatusUnknown extends Status'));
         final statusTest = out
             .childFile('test/gen/models/status_test.dart')
             .readAsStringSync();
