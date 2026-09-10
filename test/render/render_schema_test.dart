@@ -4514,6 +4514,39 @@ void main() {
       expect(result, isNot(contains('this.value')));
     });
 
+    test('Quirks.copyWith replaces provided fields and keeps the rest', () {
+      const original = Quirks();
+      final unchanged = original.copyWith();
+      expect(unchanged.dynamicJson, isFalse);
+      expect(unchanged.mutableModels, isFalse);
+      expect(unchanged.allListsDefaultToEmpty, isFalse);
+      expect(unchanged.screamingCapsEnums, isFalse);
+      expect(unchanged.flatModelDir, isFalse);
+      expect(unchanged.preserveUnknownEnums, isFalse);
+
+      final copied = original.copyWith(
+        dynamicJson: true,
+        mutableModels: true,
+        allListsDefaultToEmpty: true,
+        screamingCapsEnums: true,
+        flatModelDir: true,
+        preserveUnknownEnums: true,
+      );
+      expect(copied.dynamicJson, isTrue);
+      expect(copied.mutableModels, isTrue);
+      expect(copied.allListsDefaultToEmpty, isTrue);
+      expect(copied.screamingCapsEnums, isTrue);
+      expect(copied.flatModelDir, isTrue);
+      expect(copied.preserveUnknownEnums, isTrue);
+
+      expect(
+        const Quirks(
+          preserveUnknownEnums: true,
+        ).copyWith().preserveUnknownEnums,
+        isTrue,
+      );
+    });
+
     test('preserveUnknownEnums is off under Quirks.openapi', () {
       expect(const Quirks.openapi().preserveUnknownEnums, isFalse);
       expect(const Quirks().preserveUnknownEnums, isFalse);
