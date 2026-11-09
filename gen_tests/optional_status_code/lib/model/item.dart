@@ -1,4 +1,4 @@
-import 'package:connectivity_failures/model_helpers.dart';
+import 'package:optional_status_code/model_helpers.dart';
 
 class Item {
   Item({required this.name});

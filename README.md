@@ -217,22 +217,20 @@ membership check so an unknown int is kept.
 
 Without the flag, `fromJson` throws `FormatException` on unknown values.
 
-#### Connectivity failures
+#### Optional status code
 
-`--connectivity-failures` (also `Quirks.connectivityFailures`) is independent
+`--optional-status-code` (also `Quirks.optionalStatusCode`) is independent
 of `--openapi` and off by default.
 
 By default a request that produces no complete HTTP response, for any reason,
 throws `ApiException` with `code` 400, indistinguishable from a real 400
 response. With the flag on, `ApiException.code` is `int?` and is `null` for
-those failures. A new `ApiException.connectivityFailure`
-(`ConnectivityFailure.socket`, `tls`, `io`, `client` or `unknown`) says which
-kind of failure it was, and `innerException` keeps the original error.
-Responses keep their real status code and no `connectivityFailure`.
+those failures, and `innerException` keeps the original error. Responses keep
+their real status code.
 
-The cause is not always the network: `io` and `unknown` can also be a local
-error (for example an unreadable upload file or a timeout). On web, `fetch`
-reports every request without a response as `client`, so offline, CORS and
+The cause is not always the network: the failure can also be a local error
+(for example an unreadable upload file or a timeout). On web, `fetch` reports
+every request without a response the same way, so offline, CORS and
 extension-blocked requests cannot be told apart.
 
 Enabling the flag is a breaking change for callers that read `code` as an

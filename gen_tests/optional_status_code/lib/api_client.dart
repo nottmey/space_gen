@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:connectivity_failures/api_exception.dart';
-import 'package:connectivity_failures/auth.dart';
 import 'package:http/http.dart';
+import 'package:optional_status_code/api_exception.dart';
+import 'package:optional_status_code/auth.dart';
 
-export 'package:connectivity_failures/auth.dart';
+export 'package:optional_status_code/auth.dart';
 
 /// The HTTP methods supported by the API.
 enum Method {
@@ -150,36 +150,36 @@ class ApiClient {
     try {
       return await send();
     } on SocketException catch (error, trace) {
-      throw ApiException<Object?>.connectivity(
-        ConnectivityFailure.socket,
+      throw ApiException<Object?>.withInner(
+        null,
         'Socket operation failed: $method $path',
         error,
         trace,
       );
     } on TlsException catch (error, trace) {
-      throw ApiException<Object?>.connectivity(
-        ConnectivityFailure.tls,
+      throw ApiException<Object?>.withInner(
+        null,
         'TLS/SSL communication failed: $method $path',
         error,
         trace,
       );
     } on IOException catch (error, trace) {
-      throw ApiException<Object?>.connectivity(
-        ConnectivityFailure.io,
+      throw ApiException<Object?>.withInner(
+        null,
         'I/O operation failed: $method $path',
         error,
         trace,
       );
     } on ClientException catch (error, trace) {
-      throw ApiException<Object?>.connectivity(
-        ConnectivityFailure.client,
+      throw ApiException<Object?>.withInner(
+        null,
         'HTTP connection failed: $method $path',
         error,
         trace,
       );
     } on Exception catch (error, trace) {
-      throw ApiException<Object?>.connectivity(
-        ConnectivityFailure.unknown,
+      throw ApiException<Object?>.withInner(
+        null,
         'Exception occurred: $method $path',
         error,
         trace,

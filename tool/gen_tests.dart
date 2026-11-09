@@ -108,8 +108,7 @@ List<TestCase> _testsFromManifest(Directory testDir) {
     final openapi = entry['openapi'] as bool? ?? dirOpenapi;
     final preserveUnknownEnums =
         entry['preserveUnknownEnums'] as bool? ?? false;
-    final connectivityFailures =
-        entry['connectivityFailures'] as bool? ?? false;
+    final optionalStatusCode = entry['optionalStatusCode'] as bool? ?? false;
     final verify = entry['verify'] as bool? ?? dirVerify;
     tests.add(
       TestCase(
@@ -117,7 +116,7 @@ List<TestCase> _testsFromManifest(Directory testDir) {
         outDir: testDir.childDirectory(packageName),
         quirks: (openapi ? const Quirks.openapi() : const Quirks()).copyWith(
           preserveUnknownEnums: preserveUnknownEnums,
-          connectivityFailures: connectivityFailures,
+          optionalStatusCode: optionalStatusCode,
         ),
         verify: verify,
       ),

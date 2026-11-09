@@ -7,7 +7,7 @@ class Quirks {
     this.screamingCapsEnums = false,
     this.flatModelDir = false,
     this.preserveUnknownEnums = false,
-    this.connectivityFailures = false,
+    this.optionalStatusCode = false,
   });
 
   const Quirks.openapi()
@@ -49,11 +49,11 @@ class Quirks {
 
   /// Report requests that produced no complete HTTP response, for any
   /// reason (offline, DNS, TLS, blocked by CORS, a timeout, ...), as an
-  /// `ApiException` with a `null` `code` and a `connectivityFailure`
-  /// classification, instead of a made-up `400`. Off by default: it makes
-  /// `ApiException.code` nullable, which is a breaking change for callers
-  /// that read it as an `int`. Independent of [Quirks.openapi].
-  final bool connectivityFailures;
+  /// `ApiException` with a `null` `code`, instead of a made-up `400`. Off by
+  /// default: it makes `ApiException.code` nullable, which is a breaking
+  /// change for callers that read it as an `int`. Independent of
+  /// [Quirks.openapi].
+  final bool optionalStatusCode;
 
   /// Returns a copy with the given fields replaced.
   Quirks copyWith({
@@ -63,7 +63,7 @@ class Quirks {
     bool? screamingCapsEnums,
     bool? flatModelDir,
     bool? preserveUnknownEnums,
-    bool? connectivityFailures,
+    bool? optionalStatusCode,
   }) => Quirks(
     dynamicJson: dynamicJson ?? this.dynamicJson,
     mutableModels: mutableModels ?? this.mutableModels,
@@ -72,6 +72,6 @@ class Quirks {
     screamingCapsEnums: screamingCapsEnums ?? this.screamingCapsEnums,
     flatModelDir: flatModelDir ?? this.flatModelDir,
     preserveUnknownEnums: preserveUnknownEnums ?? this.preserveUnknownEnums,
-    connectivityFailures: connectivityFailures ?? this.connectivityFailures,
+    optionalStatusCode: optionalStatusCode ?? this.optionalStatusCode,
   );
 }

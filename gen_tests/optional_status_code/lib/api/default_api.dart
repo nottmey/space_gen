@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:connectivity_failures/api_client.dart';
-import 'package:connectivity_failures/api_exception.dart';
-import 'package:connectivity_failures/model/item.dart';
-import 'package:connectivity_failures/model/problem.dart';
+import 'package:optional_status_code/api_client.dart';
+import 'package:optional_status_code/api_exception.dart';
+import 'package:optional_status_code/model/item.dart';
+import 'package:optional_status_code/model/problem.dart';
 
 /// Endpoints with tag Default
 class DefaultApi {

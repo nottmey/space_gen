@@ -1,5 +1,5 @@
 // GENERATED — do not hand-edit.
-import 'package:connectivity_failures/api.dart';
+import 'package:optional_status_code/api.dart';
 import 'package:test/test.dart';
 
 void main() {

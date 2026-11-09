@@ -155,50 +155,34 @@ void logNameCollisions(Iterable<RenderSchema> schemas) {
   }
 }
 
-/// First line after the `ApiException` section of the `api_exception`
-/// template: everything from here on is the `validate` extensions, which
-/// every variant of the exception keeps verbatim.
-const _apiExceptionValidatorsMarker =
-    '/// Validates a number against the constraints a schema declares for it.';
-
-/// Swaps the `ApiException` section of the `api_exception` [template] for
-/// the one in [connectivity] (the `api_exception_connectivity` template),
-/// which has a nullable `code` and a `ConnectivityFailure` classification.
-/// Everything from the `validate` extensions on is kept.
+/// Makes `ApiException.code` nullable in the `api_exception` template.
 @visibleForTesting
-String withConnectivityFailures({
-  required String template,
-  required String connectivity,
-}) {
-  final validators = template.indexOf(_apiExceptionValidatorsMarker);
-  if (validators == -1) {
-    throw Exception(
-      'Marker $_apiExceptionValidatorsMarker not found in api_exception',
-    );
-  }
-  return '${connectivity.trimRight()}\n\n${template.substring(validators)}';
-}
+const apiExceptionOptionalStatusCodeReplacements = {
+  '  final int code;\n':
+      '  /// The HTTP status code, or `null` if no response was received.\n'
+      '  final int? code;\n',
+};
 
 /// Rewrites the transport-failure mapping in the `api_client` template so
-/// each failure throws `ApiException.connectivity` with its own
-/// `ConnectivityFailure` instead of an `ApiException` with a `400`.
+/// a request that produced no HTTP response throws an `ApiException` with a
+/// `null` code instead of a made-up `400`.
 ///
 /// Keyed on the message each branch already carries, so that a template
 /// change that moves or renames a branch fails the mandatory-replacement
 /// check instead of silently skipping it.
 @visibleForTesting
-final Map<String, String> connectivityFailureReplacements = {
-  for (final (message, failure) in const [
-    ('Socket operation failed', 'socket'),
-    ('TLS/SSL communication failed', 'tls'),
-    ('I/O operation failed', 'io'),
-    ('HTTP connection failed', 'client'),
-    ('Exception occurred', 'unknown'),
+final Map<String, String> optionalStatusCodeReplacements = {
+  for (final message in const [
+    'Socket operation failed',
+    'TLS/SSL communication failed',
+    'I/O operation failed',
+    'HTTP connection failed',
+    'Exception occurred',
   ])
     'ApiException<Object?>.withInner(\n'
             "        HttpStatus.badRequest,\n        '$message":
-        'ApiException<Object?>.connectivity(\n'
-        "        ConnectivityFailure.$failure,\n        '$message",
+        'ApiException<Object?>.withInner(\n'
+        "        null,\n        '$message",
 };
 
 @visibleForTesting
@@ -600,10 +584,8 @@ class FileRenderer {
     required String name,
     required String outPath,
     Map<String, String> replacements = const {},
-    String Function(String template)? rewrite,
   }) {
-    final loaded = templates.loadDartTemplate(name);
-    final output = rewrite == null ? loaded : rewrite(loaded);
+    final output = templates.loadDartTemplate(name);
     final content = applyMandatoryReplacements(output, replacements);
     // After replacement, not before: the same-package imports only get
     // their real paths here, and where those sort among the third-party
@@ -618,14 +600,10 @@ class FileRenderer {
     _renderDartFile(
       name: 'api_exception',
       outPath: 'lib/api_exception.dart',
-      rewrite: quirks.connectivityFailures
-          ? (template) => withConnectivityFailures(
-              template: template,
-              connectivity: templates.loadDartTemplate(
-                'api_exception_connectivity',
-              ),
-            )
-          : null,
+      replacements: {
+        if (quirks.optionalStatusCode)
+          ...apiExceptionOptionalStatusCodeReplacements,
+      },
     );
   }
 
@@ -666,7 +644,7 @@ class FileRenderer {
       replacements: {
         'package:space_gen/templates': 'package:$packageName',
         'TEMPLATE_BASE_URI': spec.serverUrl.toString(),
-        if (quirks.connectivityFailures) ...connectivityFailureReplacements,
+        if (quirks.optionalStatusCode) ...optionalStatusCodeReplacements,
       },
     );
   }

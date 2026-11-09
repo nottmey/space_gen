@@ -167,9 +167,6 @@ bool hasGeneratedSchemaDirs(Directory out) {
   return false;
 }
 
-const _validatorsMarker =
-    '/// Validates a number against the constraints a schema declares for it.';
-
 void main() {
   group('loadAndRenderSpec', () {
     const localFs = LocalFileSystem();
@@ -745,10 +742,10 @@ void main() {
       expect(body, contains('Role.fromJson(value.toJson())'));
     });
 
-    group('connectivityFailures', () {
+    group('optionalStatusCode', () {
       final spec = {
         'openapi': '3.1.0',
-        'info': {'title': 'Connectivity', 'version': '1.0.0'},
+        'info': {'title': 'Optional status code', 'version': '1.0.0'},
         'servers': [
           {'url': 'https://example.com'},
         ],
@@ -771,55 +768,29 @@ void main() {
             .childFile('lib/api_exception.dart')
             .readAsStringSync();
         expect(exception, contains('final int code;'));
-        expect(exception, isNot(contains('ConnectivityFailure')));
         final client = out.childFile('lib/api_client.dart').readAsStringSync();
         expect(client, contains('HttpStatus.badRequest'));
-        expect(client, isNot(contains('ApiException<Object?>.connectivity')));
       });
 
-      test('emits a nullable code and classifies every failure', () async {
+      test('emits a nullable code and no made-up 400', () async {
         final out = MemoryFileSystem.test().directory('out');
         await renderToDirectory(
           spec: spec,
           outDir: out,
-          quirks: const Quirks(connectivityFailures: true),
+          quirks: const Quirks(optionalStatusCode: true),
         );
         final exception = out
             .childFile('lib/api_exception.dart')
             .readAsStringSync();
         expect(exception, contains('final int? code;'));
-        expect(exception, contains('enum ConnectivityFailure {'));
         expect(exception, contains('extension ValidateNumber on num'));
         final client = out.childFile('lib/api_client.dart').readAsStringSync();
         expect(client, isNot(contains('HttpStatus.badRequest')));
-        for (final failure in ['socket', 'tls', 'io', 'client', 'unknown']) {
-          expect(client, contains('ConnectivityFailure.$failure,'));
-        }
         expect(
-          RegExp(r'ApiException<Object\?>\.connectivity').allMatches(client),
+          RegExp(
+            r'ApiException<Object\?>\.withInner\(\n\s+null,',
+          ).allMatches(client),
           hasLength(5),
-        );
-      });
-
-      test('withConnectivityFailures keeps the validate extensions', () {
-        final result = withConnectivityFailures(
-          template:
-              'class ApiException {}\n\n$_validatorsMarker\nextension X {}',
-          connectivity: 'class ApiException<T> {}\n',
-        );
-        expect(
-          result,
-          'class ApiException<T> {}\n\n$_validatorsMarker\nextension X {}',
-        );
-      });
-
-      test('withConnectivityFailures fails when the marker moves', () {
-        expect(
-          () => withConnectivityFailures(
-            template: 'class ApiException {}',
-            connectivity: 'class ApiException<T> {}',
-          ),
-          throwsA(isA<Exception>()),
         );
       });
     });
