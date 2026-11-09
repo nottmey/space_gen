@@ -217,6 +217,25 @@ membership check so an unknown int is kept.
 
 Without the flag, `fromJson` throws `FormatException` on unknown values.
 
+#### Connectivity failures
+
+`--connectivity-failures` (also `Quirks.connectivityFailures`) is independent
+of `--openapi` and off by default.
+
+By default a request that gets no HTTP response (offline, DNS, TLS, blocked by
+CORS, ...) throws `ApiException` with `code` 400, indistinguishable from a
+real 400 response. With the flag on, `ApiException.code` is `int?` and is
+`null` for those failures. A new `ApiException.connectivityFailure`
+(`ConnectivityFailure.socket`, `tls`, `io`, `client` or `unknown`) says which
+kind of failure it was, and `innerException` keeps the original error.
+Responses keep their real status code and no `connectivityFailure`.
+
+On web, `fetch` reports every request without a response as `client`, so
+offline and CORS failures cannot be told apart.
+
+Enabling the flag is a breaking change for callers that read `code` as an
+`int`.
+
 #### Mutable Models
 
 OpenAPI generates mutable model types and your existing code may depend on

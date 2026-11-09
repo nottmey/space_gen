@@ -4524,6 +4524,7 @@ void main() {
       expect(unchanged.screamingCapsEnums, isFalse);
       expect(unchanged.flatModelDir, isFalse);
       expect(unchanged.preserveUnknownEnums, isFalse);
+      expect(unchanged.connectivityFailures, isFalse);
 
       final copied = original.copyWith(
         dynamicJson: true,
@@ -4532,6 +4533,7 @@ void main() {
         screamingCapsEnums: true,
         flatModelDir: true,
         preserveUnknownEnums: true,
+        connectivityFailures: true,
       );
       expect(copied.dynamicJson, isTrue);
       expect(copied.mutableModels, isTrue);
@@ -4539,6 +4541,7 @@ void main() {
       expect(copied.screamingCapsEnums, isTrue);
       expect(copied.flatModelDir, isTrue);
       expect(copied.preserveUnknownEnums, isTrue);
+      expect(copied.connectivityFailures, isTrue);
 
       expect(
         const Quirks(
@@ -4546,6 +4549,17 @@ void main() {
         ).copyWith().preserveUnknownEnums,
         isTrue,
       );
+      expect(
+        const Quirks(
+          connectivityFailures: true,
+        ).copyWith().connectivityFailures,
+        isTrue,
+      );
+    });
+
+    test('connectivityFailures is off under Quirks.openapi', () {
+      expect(const Quirks.openapi().connectivityFailures, isFalse);
+      expect(const Quirks().connectivityFailures, isFalse);
     });
 
     test('preserveUnknownEnums is off under Quirks.openapi', () {

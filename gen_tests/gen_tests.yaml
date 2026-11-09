@@ -14,7 +14,8 @@
 # (dynamicJson, mutableModels, allListsDefaultToEmpty, screamingCapsEnums,
 # flatModelDir), so the setting decides both the `lib/model/` layout and
 # the emitted nullability and mutability. `preserveUnknownEnums` is
-# independent and defaults off; set it per spec when needed.
+# independent and defaults off; set it per spec when needed. So is
+# `connectivityFailures`.
 openapi: true
 
 # `--verify` compiles and tests these (dart pub get + analyze + test).
@@ -35,3 +36,5 @@ specs:
   - spec: unsupported_auth.json
   - spec: preserve_unknown_enums.json
     preserveUnknownEnums: true
+  - spec: connectivity_failures.json
+    connectivityFailures: true

@@ -1,0 +1,63 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Connectivity failures",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://example.com"
+        }
+    ],
+    "paths": {
+        "/item": {
+            "get": {
+                "operationId": "getItem",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Item"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Item": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Problem": {
+                "type": "object",
+                "required": ["reason"],
+                "properties": {
+                    "reason": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -8,7 +8,8 @@ import 'package:space_gen/src/render.dart';
 import 'package:space_gen/src/render/file_renderer.dart';
 
 /// Entrypoint helper: parses the standard space_gen CLI flags
-/// (`--in`/`--out`/`--verbose`/`--openapi`/`--preserve-unknown-enums`),
+/// (`--in`/`--out`/`--verbose`/`--openapi`/`--preserve-unknown-enums`/
+/// `--connectivity-failures`),
 /// wires up a [Logger], resolves the bundled templates directory, and
 /// runs [loadAndRenderSpec].
 ///
@@ -57,6 +58,14 @@ Future<int> _runCli(
           '--openapi.',
     )
     ..addFlag(
+      'connectivity-failures',
+      help:
+          'Throw ApiException with a null code and a connectivityFailure '
+          'classification when a request produces no HTTP response, instead '
+          'of a made-up 400. Makes ApiException.code nullable. Combinable '
+          'with --openapi.',
+    )
+    ..addFlag(
       'clear',
       defaultsTo: true,
       help:
@@ -90,6 +99,7 @@ Future<int> _runCli(
       : const Quirks();
   final quirks = baseQuirks.copyWith(
     preserveUnknownEnums: results['preserve-unknown-enums'] as bool,
+    connectivityFailures: results['connectivity-failures'] as bool,
   );
 
   final templatesUri = await Isolate.resolvePackageUri(

@@ -7,6 +7,7 @@ class Quirks {
     this.screamingCapsEnums = false,
     this.flatModelDir = false,
     this.preserveUnknownEnums = false,
+    this.connectivityFailures = false,
   });
 
   const Quirks.openapi()
@@ -46,6 +47,14 @@ class Quirks {
   /// overwrite a new member the old build does not know.
   final bool preserveUnknownEnums;
 
+  /// Report requests that never produced an HTTP response (offline, DNS,
+  /// TLS, blocked by CORS, ...) as an `ApiException` with a `null` `code`
+  /// and a `connectivityFailure` classification, instead of a made-up
+  /// `400`. Off by default: it makes `ApiException.code` nullable, which
+  /// is a breaking change for callers that read it as an `int`. Independent
+  /// of [Quirks.openapi].
+  final bool connectivityFailures;
+
   /// Returns a copy with the given fields replaced.
   Quirks copyWith({
     bool? dynamicJson,
@@ -54,6 +63,7 @@ class Quirks {
     bool? screamingCapsEnums,
     bool? flatModelDir,
     bool? preserveUnknownEnums,
+    bool? connectivityFailures,
   }) => Quirks(
     dynamicJson: dynamicJson ?? this.dynamicJson,
     mutableModels: mutableModels ?? this.mutableModels,
@@ -62,5 +72,6 @@ class Quirks {
     screamingCapsEnums: screamingCapsEnums ?? this.screamingCapsEnums,
     flatModelDir: flatModelDir ?? this.flatModelDir,
     preserveUnknownEnums: preserveUnknownEnums ?? this.preserveUnknownEnums,
+    connectivityFailures: connectivityFailures ?? this.connectivityFailures,
   );
 }
