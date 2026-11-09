@@ -6,7 +6,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:discord/api_client.dart';
 import 'package:discord/api_exception.dart';
 import 'package:discord/messages/activities_attachment_response.dart';

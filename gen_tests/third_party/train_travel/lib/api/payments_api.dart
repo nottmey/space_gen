@@ -7,7 +7,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:train_travel/api_client.dart';
 import 'package:train_travel/api_exception.dart';
 import 'package:train_travel/messages/create_booking_payment200_response.dart';

@@ -3,7 +3,6 @@
 // 80 cols as bare identifiers.
 // ignore_for_file: lines_longer_than_80_chars
 import 'dart:typed_data';
-
 import 'package:discord/model_helpers.dart';
 import 'package:meta/meta.dart';
 

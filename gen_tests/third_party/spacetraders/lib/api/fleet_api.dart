@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:meta/meta.dart';
 import 'package:spacetraders/api_client.dart';
 import 'package:spacetraders/api_exception.dart';
