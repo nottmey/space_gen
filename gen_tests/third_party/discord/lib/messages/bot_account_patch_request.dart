@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+
 import 'package:discord/api_exception.dart';
 import 'package:discord/model_helpers.dart';
 import 'package:meta/meta.dart';

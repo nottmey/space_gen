@@ -47,12 +47,12 @@ class Quirks {
   /// overwrite a new member the old build does not know.
   final bool preserveUnknownEnums;
 
-  /// Report requests that never produced an HTTP response (offline, DNS,
-  /// TLS, blocked by CORS, ...) as an `ApiException` with a `null` `code`
-  /// and a `connectivityFailure` classification, instead of a made-up
-  /// `400`. Off by default: it makes `ApiException.code` nullable, which
-  /// is a breaking change for callers that read it as an `int`. Independent
-  /// of [Quirks.openapi].
+  /// Report requests that produced no complete HTTP response, for any
+  /// reason (offline, DNS, TLS, blocked by CORS, a timeout, ...), as an
+  /// `ApiException` with a `null` `code` and a `connectivityFailure`
+  /// classification, instead of a made-up `400`. Off by default: it makes
+  /// `ApiException.code` nullable, which is a breaking change for callers
+  /// that read it as an `int`. Independent of [Quirks.openapi].
   final bool connectivityFailures;
 
   /// Returns a copy with the given fields replaced.

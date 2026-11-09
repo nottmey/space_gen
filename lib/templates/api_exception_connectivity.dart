@@ -1,6 +1,10 @@
 import 'package:meta/meta.dart';
 
-/// Why a request failed before an HTTP response was received.
+/// Why a request produced no complete HTTP response, whatever the reason.
+///
+/// The cause is not always the network: [io] and [unknown] can also be a
+/// local error, and [client] can be a server misconfiguration such as a
+/// blocked CORS preflight.
 enum ConnectivityFailure {
   /// A socket operation failed: no route, connection refused or reset, DNS
   /// lookup failure.
@@ -9,16 +13,17 @@ enum ConnectivityFailure {
   /// The TLS handshake or certificate validation failed.
   tls,
 
-  /// Another I/O error occurred while sending the request or reading the
-  /// response.
+  /// An `IOException` other than a socket or TLS failure, for example a
+  /// local file that could not be read for a multipart upload.
   io,
 
   /// The HTTP client reported a failed connection. On web, `fetch` raises
   /// this for every request that got no response (offline, DNS, blocked by
-  /// CORS) without saying which.
+  /// CORS, blocked by an extension) without saying which.
   client,
 
-  /// Any other exception thrown while sending the request.
+  /// Any other exception thrown while sending the request or reading the
+  /// response, for example a timeout.
   unknown,
 }
 
@@ -28,8 +33,9 @@ enum ConnectivityFailure {
 /// This is used to provide a standard exception type for clients to handle.
 ///
 /// A request that received an HTTP response has a [code] and no
-/// [connectivityFailure]. A request that never received one has a `null`
-/// [code] and a [connectivityFailure] classifying why.
+/// [connectivityFailure]. A request that produced no complete response, for
+/// any reason, has a `null` [code] and a [connectivityFailure] classifying
+/// why.
 ///
 /// The generic `T` is the parsed body of the error response, as declared by
 /// the operation's `default:` (or error) response in the OpenAPI spec. For
@@ -73,7 +79,7 @@ class ApiException<T> implements Exception {
   /// a schema. Null otherwise.
   final T? body;
 
-  /// Why no response was received, or `null` if there was one.
+  /// Why no complete response was received, or `null` if there was one.
   final ConnectivityFailure? connectivityFailure;
   final Exception? innerException;
   final StackTrace? stackTrace;
